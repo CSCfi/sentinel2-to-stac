@@ -1,0 +1,777 @@
+{
+  "type": "Feature",
+  "stac_version": "1.0.0",
+  "id": "S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551",
+  "properties": {
+    "eo:cloud_cover": 52,
+    "data_cover": 100,
+    "orbit": "122",
+    "baseline": "02.06",
+    "platform": "sentinel-2",
+    "instrument": "msi",
+    "constellation": "sentinel-2",
+    "mission": "copernicus",
+    "proj:epsg": 32634,
+    "gsd": 10,
+    "eo:bands": [
+      {
+        "name": "B01",
+        "common_name": "coastal",
+        "description": "Coastal: 400 - 450 nm"
+      },
+      {
+        "name": "B02",
+        "common_name": "blue",
+        "description": "Blue: 450 - 500 nm"
+      },
+      {
+        "name": "B03",
+        "common_name": "green",
+        "description": "Green: 500 - 600 nm"
+      },
+      {
+        "name": "B04",
+        "common_name": "red",
+        "description": "Red: 600 - 700 nm"
+      },
+      {
+        "name": "B05",
+        "common_name": "rededge",
+        "description": "Vegetation Red Edge: 705 nm"
+      },
+      {
+        "name": "B06",
+        "common_name": "rededge",
+        "description": "Vegetation Red Edge: 740 nm"
+      },
+      {
+        "name": "B07",
+        "common_name": "rededge",
+        "description": "Vegetation Red Edge: 783 nm"
+      },
+      {
+        "name": "B08",
+        "common_name": "nir",
+        "description": "Near-IR: 750 - 1000 nm"
+      },
+      {
+        "name": "B8A",
+        "common_name": "nir08",
+        "description": "Near-IR: 750 - 900 nm"
+      },
+      {
+        "name": "B09",
+        "common_name": "nir09",
+        "description": "Water vapour: 850 - 1050 nm"
+      },
+      {
+        "name": "B10",
+        "common_name": "cirrus",
+        "description": "SWIR-Cirrus: 1350 - 1400 nm"
+      },
+      {
+        "name": "B11",
+        "common_name": "swir16",
+        "description": "SWIR16: 1550 - 1750 nm"
+      },
+      {
+        "name": "B12",
+        "common_name": "swir22",
+        "description": "SWIR22: 2100 - 2300 nm"
+      }
+    ],
+    "proj:transform": [
+      10.0,
+      0.0,
+      499980.0,
+      0.0,
+      -10.0,
+      6800040.0,
+      0.0,
+      0.0,
+      1.0
+    ],
+    "datetime": "2018-06-15T00:00:00Z"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          23.05056402364598,
+          60.33378043305085
+        ],
+        [
+          23.05056402364598,
+          61.334442483047106
+        ],
+        [
+          20.999626281785662,
+          61.334442483047106
+        ],
+        [
+          20.999626281785662,
+          60.33378043305085
+        ],
+        [
+          23.05056402364598,
+          60.33378043305085
+        ]
+      ]
+    ]
+  },
+  "links": [
+    {
+      "rel": "root",
+      "href": "../../catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "collection",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Sentinel-2 L2A"
+    },
+    {
+      "rel": "parent",
+      "href": "../collection.json",
+      "type": "application/json",
+      "title": "Sentinel-2 L2A"
+    }
+  ],
+  "assets": {
+    "thumbnail": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/QI_DATA/T34VEN_20180615T100031_PVI.jp2",
+      "type": "image/jp2",
+      "title": "Thumbnail image",
+      "proj:shape": [
+        343,
+        343
+      ],
+      "roles": [
+        "thumbnail"
+      ]
+    },
+    "B02_10m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R10m/T34VEN_20180615T100031_B02_10m.jp2",
+      "type": "image/jp2",
+      "title": "B02_10m",
+      "gsd": 10,
+      "proj:shape": [
+        10980,
+        10980
+      ],
+      "eo:bands": [
+        {
+          "name": "B02",
+          "common_name": "blue",
+          "description": "Blue: 450 - 500 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B03_10m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R10m/T34VEN_20180615T100031_B03_10m.jp2",
+      "type": "image/jp2",
+      "title": "B03_10m",
+      "gsd": 10,
+      "proj:shape": [
+        10980,
+        10980
+      ],
+      "eo:bands": [
+        {
+          "name": "B03",
+          "common_name": "green",
+          "description": "Green: 500 - 600 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B04_10m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R10m/T34VEN_20180615T100031_B04_10m.jp2",
+      "type": "image/jp2",
+      "title": "B04_10m",
+      "gsd": 10,
+      "proj:shape": [
+        10980,
+        10980
+      ],
+      "eo:bands": [
+        {
+          "name": "B04",
+          "common_name": "red",
+          "description": "Red: 600 - 700 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B08_10m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R10m/T34VEN_20180615T100031_B08_10m.jp2",
+      "type": "image/jp2",
+      "title": "B08_10m",
+      "gsd": 10,
+      "proj:shape": [
+        10980,
+        10980
+      ],
+      "eo:bands": [
+        {
+          "name": "B08",
+          "common_name": "nir",
+          "description": "Near-IR: 750 - 1000 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "TCI_10m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R10m/T34VEN_20180615T100031_TCI_10m.jp2",
+      "type": "image/jp2",
+      "title": "TCI_10m",
+      "gsd": 10,
+      "proj:shape": [
+        10980,
+        10980
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "WVP_10m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R10m/T34VEN_20180615T100031_WVP_10m.jp2",
+      "type": "image/jp2",
+      "title": "WVP_10m",
+      "gsd": 10,
+      "proj:shape": [
+        10980,
+        10980
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "AOT_20m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R20m/T34VEN_20180615T100031_AOT_20m.jp2",
+      "type": "image/jp2",
+      "title": "AOT_20m",
+      "gsd": 20,
+      "proj:shape": [
+        5490,
+        5490
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B02_20m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R20m/T34VEN_20180615T100031_B02_20m.jp2",
+      "type": "image/jp2",
+      "title": "B02_20m",
+      "gsd": 20,
+      "proj:shape": [
+        5490,
+        5490
+      ],
+      "eo:bands": [
+        {
+          "name": "B02",
+          "common_name": "blue",
+          "description": "Blue: 450 - 500 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B03_20m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R20m/T34VEN_20180615T100031_B03_20m.jp2",
+      "type": "image/jp2",
+      "title": "B03_20m",
+      "gsd": 20,
+      "proj:shape": [
+        5490,
+        5490
+      ],
+      "eo:bands": [
+        {
+          "name": "B03",
+          "common_name": "green",
+          "description": "Green: 500 - 600 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B04_20m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R20m/T34VEN_20180615T100031_B04_20m.jp2",
+      "type": "image/jp2",
+      "title": "B04_20m",
+      "gsd": 20,
+      "proj:shape": [
+        5490,
+        5490
+      ],
+      "eo:bands": [
+        {
+          "name": "B04",
+          "common_name": "red",
+          "description": "Red: 600 - 700 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B05_20m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R20m/T34VEN_20180615T100031_B05_20m.jp2",
+      "type": "image/jp2",
+      "title": "B05_20m",
+      "gsd": 20,
+      "proj:shape": [
+        5490,
+        5490
+      ],
+      "eo:bands": [
+        {
+          "name": "B05",
+          "common_name": "rededge",
+          "description": "Vegetation Red Edge: 705 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B06_20m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R20m/T34VEN_20180615T100031_B06_20m.jp2",
+      "type": "image/jp2",
+      "title": "B06_20m",
+      "gsd": 20,
+      "proj:shape": [
+        5490,
+        5490
+      ],
+      "eo:bands": [
+        {
+          "name": "B06",
+          "common_name": "rededge",
+          "description": "Vegetation Red Edge: 740 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B07_20m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R20m/T34VEN_20180615T100031_B07_20m.jp2",
+      "type": "image/jp2",
+      "title": "B07_20m",
+      "gsd": 20,
+      "proj:shape": [
+        5490,
+        5490
+      ],
+      "eo:bands": [
+        {
+          "name": "B07",
+          "common_name": "rededge",
+          "description": "Vegetation Red Edge: 783 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B11_20m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R20m/T34VEN_20180615T100031_B11_20m.jp2",
+      "type": "image/jp2",
+      "title": "B11_20m",
+      "gsd": 20,
+      "proj:shape": [
+        5490,
+        5490
+      ],
+      "eo:bands": [
+        {
+          "name": "B11",
+          "common_name": "swir16",
+          "description": "SWIR16: 1550 - 1750 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B12_20m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R20m/T34VEN_20180615T100031_B12_20m.jp2",
+      "type": "image/jp2",
+      "title": "B12_20m",
+      "gsd": 20,
+      "proj:shape": [
+        5490,
+        5490
+      ],
+      "eo:bands": [
+        {
+          "name": "B12",
+          "common_name": "swir22",
+          "description": "SWIR22: 2100 - 2300 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B8A_20m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R20m/T34VEN_20180615T100031_B8A_20m.jp2",
+      "type": "image/jp2",
+      "title": "B8A_20m",
+      "gsd": 20,
+      "proj:shape": [
+        5490,
+        5490
+      ],
+      "eo:bands": [
+        {
+          "name": "B8A",
+          "common_name": "nir08",
+          "description": "Near-IR: 750 - 900 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "SCL_20m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R20m/T34VEN_20180615T100031_SCL_20m.jp2",
+      "type": "image/jp2",
+      "title": "SCL_20m",
+      "gsd": 20,
+      "proj:shape": [
+        5490,
+        5490
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "TCI_20m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R20m/T34VEN_20180615T100031_TCI_20m.jp2",
+      "type": "image/jp2",
+      "title": "TCI_20m",
+      "gsd": 20,
+      "proj:shape": [
+        5490,
+        5490
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "WVP_20m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R20m/T34VEN_20180615T100031_WVP_20m.jp2",
+      "type": "image/jp2",
+      "title": "WVP_20m",
+      "gsd": 20,
+      "proj:shape": [
+        5490,
+        5490
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "AOT_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_AOT_60m.jp2",
+      "type": "image/jp2",
+      "title": "AOT_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B01_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_B01_60m.jp2",
+      "type": "image/jp2",
+      "title": "B01_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "eo:bands": [
+        {
+          "name": "B01",
+          "common_name": "coastal",
+          "description": "Coastal: 400 - 450 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B02_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_B02_60m.jp2",
+      "type": "image/jp2",
+      "title": "B02_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "eo:bands": [
+        {
+          "name": "B02",
+          "common_name": "blue",
+          "description": "Blue: 450 - 500 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B03_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_B03_60m.jp2",
+      "type": "image/jp2",
+      "title": "B03_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "eo:bands": [
+        {
+          "name": "B03",
+          "common_name": "green",
+          "description": "Green: 500 - 600 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B04_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_B04_60m.jp2",
+      "type": "image/jp2",
+      "title": "B04_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "eo:bands": [
+        {
+          "name": "B04",
+          "common_name": "red",
+          "description": "Red: 600 - 700 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B05_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_B05_60m.jp2",
+      "type": "image/jp2",
+      "title": "B05_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "eo:bands": [
+        {
+          "name": "B05",
+          "common_name": "rededge",
+          "description": "Vegetation Red Edge: 705 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B06_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_B06_60m.jp2",
+      "type": "image/jp2",
+      "title": "B06_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "eo:bands": [
+        {
+          "name": "B06",
+          "common_name": "rededge",
+          "description": "Vegetation Red Edge: 740 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B07_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_B07_60m.jp2",
+      "type": "image/jp2",
+      "title": "B07_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "eo:bands": [
+        {
+          "name": "B07",
+          "common_name": "rededge",
+          "description": "Vegetation Red Edge: 783 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B09_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_B09_60m.jp2",
+      "type": "image/jp2",
+      "title": "B09_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "eo:bands": [
+        {
+          "name": "B09",
+          "common_name": "nir09",
+          "description": "Water vapour: 850 - 1050 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B11_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_B11_60m.jp2",
+      "type": "image/jp2",
+      "title": "B11_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "eo:bands": [
+        {
+          "name": "B11",
+          "common_name": "swir16",
+          "description": "SWIR16: 1550 - 1750 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B12_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_B12_60m.jp2",
+      "type": "image/jp2",
+      "title": "B12_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "eo:bands": [
+        {
+          "name": "B12",
+          "common_name": "swir22",
+          "description": "SWIR22: 2100 - 2300 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "B8A_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_B8A_60m.jp2",
+      "type": "image/jp2",
+      "title": "B8A_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "eo:bands": [
+        {
+          "name": "B8A",
+          "common_name": "nir08",
+          "description": "Near-IR: 750 - 900 nm"
+        }
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "SCL_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_SCL_60m.jp2",
+      "type": "image/jp2",
+      "title": "SCL_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "TCI_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_TCI_60m.jp2",
+      "type": "image/jp2",
+      "title": "TCI_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "roles": [
+        "data"
+      ]
+    },
+    "WVP_60m": {
+      "href": "https://a3s.fi/Sentinel2-MSIL2A-cloud-0-95-2018-T34VEN/S2A_MSIL2A_20180615T100031_N0206_R122_T34VEN_20180615T110551.SAFE/GRANULE/L2A_T34VEN_A015563_20180615T100026/IMG_DATA/R60m/T34VEN_20180615T100031_WVP_60m.jp2",
+      "type": "image/jp2",
+      "title": "WVP_60m",
+      "gsd": 60,
+      "proj:shape": [
+        1830,
+        1830
+      ],
+      "roles": [
+        "data"
+      ]
+    }
+  },
+  "bbox": [
+    20.999626281785662,
+    60.33378043305085,
+    23.05056402364598,
+    61.334442483047106
+  ],
+  "stac_extensions": [
+    "https://stac-extensions.github.io/eo/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/projection/v1.0.0/schema.json"
+  ],
+  "collection": "sentinel2-l2a"
+}
