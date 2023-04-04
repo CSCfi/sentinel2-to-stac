@@ -60,13 +60,27 @@ def json_convert(jsonfile):
                 "timeEnd": content["extent"]["temporal"]["interval"][0][1],
                 "primary": True,
                 "license": content["license"],
-                "licenseURL" : "https://sentinel.esa.int/documents/247904/690755/Sentinel_Data_Legal_Notice",
+                "providers": content["providers"],
                 "assets": content["assets"],
+                "licenseLink": None,
+                "summaries": content["summaries"],
                 "queryables": [
-                    "eo:identifier"
+                    "eo:identifier",
+                    "eo:cloud_cover"
                 ]
             }
         }
+
+        if "assets" in content:
+            new_json["properties"]["assets"] = content["assets"]
+
+        for link in content["links"]:
+            if link["rel"] == "license":
+                new_json["properties"]["licenseLink"] = {
+                    "href": link["href"],
+                    "rel": "license",
+                    "type": "application/json"
+                } # New License URL link
 
     if content["type"] == "Feature":
 
@@ -80,6 +94,7 @@ def json_convert(jsonfile):
                 "timeEnd": content["properties"]["datetime"],
                 "opt:cloudCover": int(content["properties"]["eo:cloud_cover"]),
                 "crs": content["properties"]["proj:epsg"],
+                "projTransform": content["proj:transform"],
                 "thumbnailURL": content["assets"]["thumbnail"]["href"],
                 "assets": content["assets"]
             }
@@ -101,14 +116,14 @@ if __name__ == "__main__":
     converted = json_convert(sentinel / "collection.json")
 
     # Additional code for changing collection data if the collection already exists
-    # collections = catalog.get_collections()
-    # for collection in collections:
-    #     if collection.id == "sentinel2-l2a":
-    #             r = requests.put(urljoin(app_host, f"collections/{collection.id}"), json=converted, auth=HTTPBasicAuth("admin", pwd))
-    #             r.raise_for_status()
-    
-    r = requests.post(urljoin(app_host, "collections/"), json=converted, auth=HTTPBasicAuth("admin", pwd))
-    r.raise_for_status()
+    collections = catalog.get_collections()
+    collection_ids = [collection.id for collection in collections]
+    if "sentinel2-l2a" in collection_ids:
+        r = requests.put(urljoin(app_host, f"collections/sentinel2-l2a"), json=converted, auth=HTTPBasicAuth("admin", pwd))
+        r.raise_for_status()
+    else:
+        r = requests.post(urljoin(app_host, "collections/"), json=converted, auth=HTTPBasicAuth("admin", pwd))
+        r.raise_for_status()
 
     # Get the posted items from the specific collection
     posted = catalog.search(collections=["sentinel2-l2a"]).item_collection()
