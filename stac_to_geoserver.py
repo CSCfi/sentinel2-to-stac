@@ -110,7 +110,7 @@ if __name__ == "__main__":
     sentinel = workingdir / "Sentinel2-tileless" / "sentinel2-l2a"
 
     app_host = "https://paituli.csc.fi/geoserver/rest/oseo/"
-    catalog = pystac_client.Client.open("https://paituli.csc.fi/geoserver/ogc/stac")
+    catalog = pystac_client.Client.open("https://paituli.csc.fi/geoserver/ogc/stac/v1/")
 
     # Convert the STAC collection json into json that GeoServer can handle
     converted = json_convert(sentinel / "collection.json")
