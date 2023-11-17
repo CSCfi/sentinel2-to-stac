@@ -128,14 +128,14 @@ if __name__ == "__main__":
     # Get the posted items from the specific collection
     posted = catalog.search(collections=["sentinel2-l2a"]).item_collection()
     posted_ids = [x.id for x in posted]
-    print(f"POSTed: {len(posted_ids)}")
+    print(f"Number of uploaded items: {len(posted_ids)}")
 
     with open(sentinel / "collection.json") as f:
         rootcollection = json.load(f)
 
     items = [x['href'] for x in rootcollection["links"] if x["rel"] == "item"]
 
-    print("POSTing items:")
+    print("Uploading items:")
     for i, item in enumerate(items):
         with open(sentinel / item) as f:
             payload = json.load(f)
@@ -149,4 +149,13 @@ if __name__ == "__main__":
         else:
             r = requests.post(urljoin(app_host, request_point), json=converted, auth=HTTPBasicAuth("admin", pwd))
             r.raise_for_status()
-        print("*", end='', flush=True) # Just to keep track that the script is still running
+        if len(items) >= 5: # Just to keep track that the script is still running
+            if i == int(len(items) / 5):
+                print("~20% of items added.")
+            elif i == int(len(items) / 5) * 2:
+                print("~40% of items added.")
+            elif i == int(len(items) / 5) * 3:
+                print("~60% of items added.")
+            elif i == int(len(items) / 5) * 4:
+                print("~80% of items added.")
+    print("All items added.")
