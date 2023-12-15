@@ -1,10 +1,15 @@
 import json
 import getpass
+import argparse
 from pathlib import Path
 import requests
 import pystac_client
 from requests.auth import HTTPBasicAuth
 from urllib.parse import urljoin
+
+def change_to_https(request: requests.Request) -> requests.Request: 
+    request.url = request.url.replace("http:", "https:")
+    return request
 
 def json_convert(jsonfile):
 
@@ -60,7 +65,11 @@ def json_convert(jsonfile):
                 "timeEnd": content["extent"]["temporal"]["interval"][0][1],
                 "primary": True,
                 "license": content["license"],
-                "licenseURL" : "https://sentinel.esa.int/documents/247904/690755/Sentinel_Data_Legal_Notice",
+                "licenseLink" : {
+                    "href" : "https://sentinel.esa.int/documents/247904/690755/Sentinel_Data_Legal_Notice",
+                    "rel" : "license",
+                    "type" : "application/json"
+                },
                 "assets": content["assets"],
                 "queryables": [
                     "eo:identifier"
@@ -80,7 +89,7 @@ def json_convert(jsonfile):
                 "timeEnd": content["properties"]["datetime"],
                 "opt:cloudCover": int(content["properties"]["eo:cloud_cover"]),
                 "crs": content["properties"]["proj:epsg"],
-                "thumbnailURL": content["assets"]["thumbnail"]["href"],
+                #"thumbnailURL": content["assets"]["thumbnail"]["href"],
                 "assets": content["assets"]
             }
         }
@@ -89,49 +98,71 @@ def json_convert(jsonfile):
 
 if __name__ == "__main__":
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--host", type=str, help="Hostname of the selected STAC API", required=True)
+    
+    args = parser.parse_args()
     pwd = getpass.getpass()
 
-    workingdir = Path(__file__).parent
-    sentinel = workingdir / "Sentinel2-tileless" / "sentinel2-l2a"
+    collection_name = "sentinel2-l2a"
 
-    app_host = "https://paituli.csc.fi/geoserver/rest/oseo/"
-    catalog = pystac_client.Client.open("https://paituli.csc.fi/geoserver/ogc/stac")
+    workingdir = Path(__file__).parent
+    collection_folder = workingdir / "Sentinel2-tileless" / collection_name
+
+    app_host = f"{args.host}/geoserver/rest/oseo/"
+
+    if args.host == "http://86.50.229.158:8080/":
+        catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/")
+    else:
+        catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/", request_modifier=change_to_https)
 
     # Convert the STAC collection json into json that GeoServer can handle
-    converted = json_convert(sentinel / "collection.json")
+    converted = json_convert(collection_folder / "collection.json")
 
     # Additional code for changing collection data if the collection already exists
-    # collections = catalog.get_collections()
-    # for collection in collections:
-    #     if collection.id == "sentinel2-l2a":
-    #             r = requests.put(urljoin(app_host, f"collections/{collection.id}"), json=converted, auth=HTTPBasicAuth("admin", pwd))
-    #             r.raise_for_status()
-    
-    r = requests.post(urljoin(app_host, "collections/"), json=converted, auth=HTTPBasicAuth("admin", pwd))
-    r.raise_for_status()
+    collections = catalog.get_collections()
+    col_ids = [col.id for col in collections]
+    if collection_name in col_ids:
+        r = requests.put(urljoin(app_host + "collections/", collection_name), json=converted, auth=HTTPBasicAuth("admin", pwd))
+        r.raise_for_status()
+        print(f"Updated {collection_name}")
+    else:
+        r = requests.post(urljoin(app_host, "collections/"), json=converted, auth=HTTPBasicAuth("admin", pwd))
+        r.raise_for_status()
+        print(f"Added new collection: {collection_name}")
 
     # Get the posted items from the specific collection
-    posted = catalog.search(collections=["sentinel2-l2a"]).item_collection()
+    posted = catalog.search(collections=[collection_name]).item_collection()
     posted_ids = [x.id for x in posted]
-    print(f"POSTed: {len(posted_ids)}")
+    print(f"Number of items: {len(posted_ids)}")
 
-    with open(sentinel / "collection.json") as f:
+    with open(collection_folder / "collection.json") as f:
         rootcollection = json.load(f)
 
     items = [x['href'] for x in rootcollection["links"] if x["rel"] == "item"]
-
-    print("POSTing items:")
+   
+    print("Uploading items:")
     for i, item in enumerate(items):
-        with open(sentinel / item) as f:
+        with open(collection_folder / item) as f:
             payload = json.load(f)
         # Convert the STAC item json into json that GeoServer can handle
-        converted = json_convert(sentinel / item)
+        converted = json_convert(collection_folder / item)
         request_point = f"collections/{rootcollection['id']}/products"
         if payload["id"] in posted_ids:
+            continue
             request_point = f"collections/{rootcollection['id']}/products/{payload['id']}"
             r = requests.put(urljoin(app_host, request_point), json=converted, auth=HTTPBasicAuth("admin", pwd))
             r.raise_for_status()
         else:
             r = requests.post(urljoin(app_host, request_point), json=converted, auth=HTTPBasicAuth("admin", pwd))
             r.raise_for_status()
-        print("*", end='', flush=True) # Just to keep track that the script is still running
+        if len(items) >= 5: # Just to keep track that the script is still running
+            if i == int(len(items) / 5):
+                print("~20% of items added")
+            elif i == int(len(items) / 5) * 2:
+                print("~40% of items added")
+            elif i == int(len(items) / 5) * 3:
+                print("~60% of items added")
+            elif i == int(len(items) / 5) * 4:
+                print("~80% of items added")
+    print("All items added.")

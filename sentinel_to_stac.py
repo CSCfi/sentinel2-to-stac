@@ -1,6 +1,11 @@
 import boto3
 import pystac as stac
 import rasterio
+import logging
+import re
+import os
+import pandas as pd
+from itertools import chain
 from datetime import datetime
 from xml.dom import minidom
 from shapely.geometry import box, mapping, GeometryCollection, shape
@@ -128,8 +133,12 @@ s2_bands_as_dict = {
 
 def init_client():
 
-    # Create client using UNSIGNED configuration in order to not need credentials
-    s3 = boto3.client('s3', endpoint_url="https://a3s.fi", region_name="regionOne", config=Config(signature_version=UNSIGNED))
+    # Create client with credentials. Allas-conf needed to be run for boto3 to get the credentials
+    s3 = boto3.client(
+        service_name = "s3",
+        endpoint_url = "https://a3s.fi", 
+        region_name = "regionOne"
+    )
 
     return s3
 
@@ -137,13 +146,22 @@ def get_buckets(client):
     """
         client: boto3.client
     """
-
     # Get the bucket names from the README-file
-    readme = client.get_object(Bucket='sentinel-readme', Key='uploadedByMariaYliHeikkila.txt')
-    buckets_readme = readme['Body'].read().splitlines()
+    # readme = client.get_object(Bucket='sentinel-readme', Key='uploadedByMariaYliHeikkila.txt')
+    # buckets_readme = readme['Body'].read().splitlines()
     
     # Separate the bucket names and provide one bucket only once
-    buckets = list(set(list(map(lambda x: x.decode().split('//',1)[1].split('/',1)[0], buckets_readme))))
+    # buckets = list(set(list(map(lambda x: x.decode().split('//',1)[1].split('/',1)[0], buckets_readme))))
+
+    bucket_information = client.list_buckets()
+    buckets = [x['Name'] for x in bucket_information['Buckets'] if re.match(r"Sentinel2(?!.*segments)", x['Name'])]
+
+    first_csv = pd.read_table("2000290_buckets.csv", header=None)
+    first_buckets = list(chain.from_iterable(first_csv.to_numpy()))
+    second_csv = pd.read_table("2001106_buckets.csv", header=None)
+    second_buckets = list(chain.from_iterable(second_csv.to_numpy()))
+    
+    buckets = [*buckets, *first_buckets, *second_buckets]
 
     return buckets
 
@@ -154,7 +172,7 @@ def create_collection(client, buckets):
     """
 
     rootcollection = make_root_collection()
-    rootcatalog = stac.Catalog(id='Sentinel-2 catalog', description='Testing catalog.')
+    rootcatalog = stac.Catalog(id='Sentinel-2 catalog', description='Sentinel 2 catalog.')
     rootcatalog.add_child(rootcollection)
     
     for bucket in buckets:
@@ -171,12 +189,16 @@ def create_collection(client, buckets):
 
         exclude = {'index.html'}
         listofsafes = list(set(list(map(lambda x: x.split('/')[0], bucketcontents))) - exclude)
+        # One project includes pseudofolders in the path representing the years, with this check, get the actual SAFEs instead
+        if any(re.match(r"\d{4}", safe) for safe in listofsafes):
+            listofsafes.clear()
+            listofsafes = list(set(list(map(lambda x: x.split('/')[1], bucketcontents))) - exclude)
         print('Bucket:', bucket)
         print('SAFES:', listofsafes)
 
         for i, safe in enumerate(listofsafes):
-            print('SAFE index:', i)
-            print('SAFE name:', safe)
+            #print('SAFE index:', i)
+            #print('SAFE name:', safe)
 
             # SAFE-filename without the subfix
             safename = str(safe.split('.')[0])
@@ -186,21 +208,26 @@ def create_collection(client, buckets):
             if not metadatafile or not crsmetadatafile:
                 # If there is no metadatafile or CRS-metadatafile, the SAFE does not include data relevant to the script
                 continue
+            # THIS FAILS WITH FOLDER BUCKETS
+            logging.log(logging.INFO, f"CRS: {crsmetadatafile}")
             safecrs_metadata = get_crs(get_metadata_content(bucket, crsmetadatafile, client))
             
             # only jp2 that are image bands
             jp2images = [x for x in bucketcontent_jp2 if safe in x and 'IMG_DATA' in x]
+            # if there are no jp2 imagefiles in the bucket, continue to the next bucket
+            if not jp2images:
+                continue
             # jp2 that are preview images
-            previewimage = [x for x in bucketcontent_jp2 if safe in x and 'PVI' in x][0]
+            previewimage = next(x for x in bucketcontent_jp2 if safe in x and 'PVI' in x)
 
             metadatacontent = get_metadata_content(bucket, metadatafile, client)
             
             for i, jp2image in enumerate(jp2images):
 
-                print('Image index:', i)
+                #print('Image index:', i)
 
                 uri = 'https://a3s.fi/' + bucket + '/' + jp2image
-                print('Image URI:', uri)
+                #print('Image URI:', uri)
 
                 items = list(rootcollection.get_items())
                 # Check if the item in question is already added to the collection
@@ -213,6 +240,9 @@ def create_collection(client, buckets):
                 else:
                     item = [x for x in items if safename in x.id][0]
                     add_asset(item, uri, safecrs_metadata)
+        
+        # Save and normalize after each bucket
+        rootcatalog.normalize_and_save('Sentinel2-tileless', catalog_type=CatalogType.RELATIVE_PUBLISHED, skip_unresolved=True)
 
     rootcatalog.normalize_hrefs('Sentinel2-tileless')
     rootcatalog.validate_all()
@@ -288,13 +318,20 @@ def make_item(uri, metadatacontent, crs_metadata):
         crs_metadata: CRS metadata dict containing CRS string and shapes for different resolutions from get_crs()
     """
 
-    print('Making item')
+    logging.info(uri)
+    #print('Making item')
     params = {}
-    params['id'] = uri.split('/')[4].split('.')[0]
+
+    if re.match(r".+?\d{4}/S2(A|B)", uri):
+        params['id'] = uri.split("/")[5].split('.')[0]
+    else:
+        params['id'] = uri.split('/')[4].split('.')[0]
+
+    #params['id'] = uri.split('/')[4].split('.')[0]
     
     with rasterio.open(uri) as src:
 
-        print(list([src.bounds]))
+        #print(list([src.bounds]))
         item_transform = src.transform
         # as lat,lon
         params['bbox'] = transform_crs(list([src.bounds]),crs_metadata['CRS'])
@@ -408,7 +445,7 @@ def add_asset(stacItem, uri, crsmetadata=None, thumbnail=False):
             asset=asset
         )
 
-    print(f'Asset added: {full_bandname}')
+    #print(f'Asset added: {full_bandname}')
 
     return stacItem
 
@@ -486,11 +523,13 @@ def get_metadata_from_xml(metadatabody):
         #metadatadict['producttype'] = get_xml_content(doc,'PRODUCT_TYPE')
         #metadatadict['productname'] = get_xml_content(doc,'PRODUCT_URI').split('.')[0]
 
-    print('Metadata extracted')
+    #print('Metadata extracted')
 
     return metadatadict
 
 if __name__ == '__main__':
+
+    logging.basicConfig(filename='debug.log', level=logging.INFO)
 
     s3 = init_client()
     buckets = get_buckets(s3)
