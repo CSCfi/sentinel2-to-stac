@@ -235,13 +235,9 @@ def create_collection(client, buckets):
                     rootcollection.add_item(item)
                     # add preview image 
                     add_asset(item, 'https://a3s.fi/' + bucket + '/' + previewimage, None, True)
-
                 else:
                     item = [x for x in items if safename in x.id][0]
                     add_asset(item, uri, safecrs_metadata)
-        
-        # Save and normalize after each bucket
-        rootcatalog.normalize_and_save('Sentinel2-tileless', catalog_type=CatalogType.RELATIVE_PUBLISHED, skip_unresolved=True)
 
     rootcatalog.normalize_hrefs('Sentinel2-tileless')
     rootcatalog.validate_all()
