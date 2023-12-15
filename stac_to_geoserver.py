@@ -65,17 +65,35 @@ def json_convert(jsonfile):
                 "timeEnd": content["extent"]["temporal"]["interval"][0][1],
                 "primary": True,
                 "license": content["license"],
+<<<<<<< HEAD
                 "licenseLink" : {
                     "href" : "https://sentinel.esa.int/documents/247904/690755/Sentinel_Data_Legal_Notice",
                     "rel" : "license",
                     "type" : "application/json"
                 },
+=======
+                "providers": content["providers"],
+>>>>>>> 07cd16f9d80fdde865e8ba8df52c65892f8a62a3
                 "assets": content["assets"],
+                "licenseLink": None,
+                "summaries": content["summaries"],
                 "queryables": [
-                    "eo:identifier"
+                    "eo:identifier",
+                    "eo:cloud_cover"
                 ]
             }
         }
+
+        if "assets" in content:
+            new_json["properties"]["assets"] = content["assets"]
+
+        for link in content["links"]:
+            if link["rel"] == "license":
+                new_json["properties"]["licenseLink"] = {
+                    "href": link["href"],
+                    "rel": "license",
+                    "type": "application/json"
+                } # New License URL link
 
     if content["type"] == "Feature":
 
@@ -89,7 +107,12 @@ def json_convert(jsonfile):
                 "timeEnd": content["properties"]["datetime"],
                 "opt:cloudCover": int(content["properties"]["eo:cloud_cover"]),
                 "crs": content["properties"]["proj:epsg"],
+<<<<<<< HEAD
                 #"thumbnailURL": content["assets"]["thumbnail"]["href"],
+=======
+                "projTransform": content["proj:transform"],
+                "thumbnailURL": content["assets"]["thumbnail"]["href"],
+>>>>>>> 07cd16f9d80fdde865e8ba8df52c65892f8a62a3
                 "assets": content["assets"]
             }
         }
@@ -106,6 +129,7 @@ if __name__ == "__main__":
 
     collection_name = "sentinel2-l2a"
 
+<<<<<<< HEAD
     workingdir = Path(__file__).parent
     collection_folder = workingdir / "Sentinel2-tileless" / collection_name
 
@@ -115,12 +139,17 @@ if __name__ == "__main__":
         catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/")
     else:
         catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/", request_modifier=change_to_https)
+=======
+    app_host = "https://paituli.csc.fi/geoserver/rest/oseo/"
+    catalog = pystac_client.Client.open("https://paituli.csc.fi/geoserver/ogc/stac/v1/")
+>>>>>>> 07cd16f9d80fdde865e8ba8df52c65892f8a62a3
 
     # Convert the STAC collection json into json that GeoServer can handle
     converted = json_convert(collection_folder / "collection.json")
 
     # Additional code for changing collection data if the collection already exists
     collections = catalog.get_collections()
+<<<<<<< HEAD
     col_ids = [col.id for col in collections]
     if collection_name in col_ids:
         r = requests.put(urljoin(app_host + "collections/", collection_name), json=converted, auth=HTTPBasicAuth("admin", pwd))
@@ -130,17 +159,34 @@ if __name__ == "__main__":
         r = requests.post(urljoin(app_host, "collections/"), json=converted, auth=HTTPBasicAuth("admin", pwd))
         r.raise_for_status()
         print(f"Added new collection: {collection_name}")
+=======
+    collection_ids = [collection.id for collection in collections]
+    if "sentinel2-l2a" in collection_ids:
+        r = requests.put(urljoin(app_host, f"collections/sentinel2-l2a"), json=converted, auth=HTTPBasicAuth("admin", pwd))
+        r.raise_for_status()
+    else:
+        r = requests.post(urljoin(app_host, "collections/"), json=converted, auth=HTTPBasicAuth("admin", pwd))
+        r.raise_for_status()
+>>>>>>> 07cd16f9d80fdde865e8ba8df52c65892f8a62a3
 
     # Get the posted items from the specific collection
     posted = catalog.search(collections=[collection_name]).item_collection()
     posted_ids = [x.id for x in posted]
+<<<<<<< HEAD
     print(f"Number of items: {len(posted_ids)}")
+=======
+    print(f"Number of uploaded items: {len(posted_ids)}")
+>>>>>>> 07cd16f9d80fdde865e8ba8df52c65892f8a62a3
 
     with open(collection_folder / "collection.json") as f:
         rootcollection = json.load(f)
 
     items = [x['href'] for x in rootcollection["links"] if x["rel"] == "item"]
+<<<<<<< HEAD
    
+=======
+
+>>>>>>> 07cd16f9d80fdde865e8ba8df52c65892f8a62a3
     print("Uploading items:")
     for i, item in enumerate(items):
         with open(collection_folder / item) as f:
@@ -158,6 +204,7 @@ if __name__ == "__main__":
             r.raise_for_status()
         if len(items) >= 5: # Just to keep track that the script is still running
             if i == int(len(items) / 5):
+<<<<<<< HEAD
                 print("~20% of items added")
             elif i == int(len(items) / 5) * 2:
                 print("~40% of items added")
@@ -165,4 +212,13 @@ if __name__ == "__main__":
                 print("~60% of items added")
             elif i == int(len(items) / 5) * 4:
                 print("~80% of items added")
+=======
+                print("~20% of items added.")
+            elif i == int(len(items) / 5) * 2:
+                print("~40% of items added.")
+            elif i == int(len(items) / 5) * 3:
+                print("~60% of items added.")
+            elif i == int(len(items) / 5) * 4:
+                print("~80% of items added.")
+>>>>>>> 07cd16f9d80fdde865e8ba8df52c65892f8a62a3
     print("All items added.")

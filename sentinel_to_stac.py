@@ -20,7 +20,6 @@ from botocore import UNSIGNED
 from botocore.client import Config
 
 # Band information in Band objects and as a dict
-
 s2_bands = {
     "B01": {
         "band": Band.create(name='B01', description='Coastal: 400 - 450 nm', common_name='coastal')
