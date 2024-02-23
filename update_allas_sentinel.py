@@ -44,16 +44,11 @@ def get_buckets(client):
     """
         client: boto3.client
     """
-    # Get the bucket names from the README-file
-    # readme = client.get_object(Bucket='sentinel-readme', Key='uploadedByMariaYliHeikkila.txt')
-    # buckets_readme = readme['Body'].read().splitlines()
-    
-    # Separate the bucket names and provide one bucket only once
-    # buckets = list(set(list(map(lambda x: x.decode().split('//',1)[1].split('/',1)[0], buckets_readme))))
-
+    # Get Buckets from the Maria CSC project   
     bucket_information = client.list_buckets()
     buckets = [x['Name'] for x in bucket_information['Buckets'] if re.match(r"Sentinel2(?!.*segments)", x['Name'])]
 
+    # Get Buckets from these two CSC projects
     first_csv = pd.read_table("2000290_buckets.csv", header=None)
     first_buckets = list(chain.from_iterable(first_csv.to_numpy()))
     second_csv = pd.read_table("2001106_buckets.csv", header=None)
@@ -590,7 +585,7 @@ if __name__ == "__main__":
     start = time.time()
 
     app_host = f"{args.host}/geoserver/rest/oseo/"
-    csc_catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/")#, request_modifier=change_to_https)
+    csc_catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/", request_modifier=change_to_https)
     all_collections = csc_catalog.get_collections()
     csc_collection = next(collection for collection in all_collections if collection.id=="sentinel2-l2a")
     print(f"Updating STAC Catalog at {args.host}")
