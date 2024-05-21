@@ -1,32 +1,27 @@
 import boto3
 import pystac
 import rasterio
-import logging
 import re
-import os
 import pandas as pd
-import json
 import getpass
 import argparse
 import requests
 import pystac_client
 import time
-from requests.auth import HTTPBasicAuth
 from urllib.parse import urljoin
 from itertools import chain
 from datetime import datetime
 from xml.dom import minidom
-from pathlib import Path
-from shapely.geometry import box, mapping, GeometryCollection, shape
+from shapely.geometry import box, mapping
 from pystac.extensions.eo import EOExtension, Band
 from pystac.extensions.projection import ProjectionExtension
 from rasterio.warp import transform_bounds
 from rasterio.crs import CRS
-from botocore import UNSIGNED
-from botocore.client import Config
 
 def change_to_https(request: requests.Request) -> requests.Request: 
     request.url = request.url.replace("http:", "https:")
+    # This is for to help filtering logging, not needed otherwise
+    request.headers["User-Agent"] = "update-script"
     return request
 
 def init_client():
@@ -364,6 +359,7 @@ def update_catalog(app_host, csc_collection):
     buckets = get_buckets(s3_client)
     session = requests.Session()
     session.auth = ("admin", pwd)
+    log_headers = {"User-Agent": "update-script"} # Added for easy log-filtering
     original_csc_collection_ids = {item.id for item in csc_collection.get_all_items()}
     print(" * CSC Items collected.")
     items_to_add = {}
@@ -434,7 +430,7 @@ def update_catalog(app_host, csc_collection):
         item_dict = items_to_add[item].to_dict()
         converted_item = json_convert(item_dict)
         request_point = f"collections/{csc_collection.id}/products"
-        r = session.post(urljoin(app_host, request_point), json=converted_item)
+        r = session.post(urljoin(app_host, request_point), headers=log_headers, json=converted_item)
         r.raise_for_status()
     
     if items_to_add:
@@ -445,7 +441,7 @@ def update_catalog(app_host, csc_collection):
         converted_collection = json_convert(collection_dict)
         request_point = f"collections/{csc_collection.id}/"
 
-        r = session.put(urljoin(app_host, request_point), json=converted_collection)
+        r = session.put(urljoin(app_host, request_point), headers=log_headers, json=converted_collection)
         r.raise_for_status()
         print(" + Updated Collection Extents.")
     else:

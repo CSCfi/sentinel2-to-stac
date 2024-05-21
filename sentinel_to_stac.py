@@ -1,9 +1,7 @@
 import boto3
 import pystac as stac
 import rasterio
-import logging
 import re
-import os
 import pandas as pd
 from itertools import chain
 from datetime import datetime
@@ -131,6 +129,11 @@ s2_bands_as_dict = {
 }
 
 def init_client():
+    """
+        Initialize the boto3 s3 client that is used to get the Buckets from Allas
+
+        -> boto3.client
+    """
 
     # Create client with credentials. Allas-conf needed to be run for boto3 to get the credentials
     s3 = boto3.client(
@@ -144,6 +147,8 @@ def init_client():
 def get_buckets(client):
     """
         client: boto3.client
+        -> buckets: list of Buckets
+        Get the Buckets from the client and two CSV files that have the buckets of two different projects
     """
     # Get the bucket names from the README-file
     # readme = client.get_object(Bucket='sentinel-readme', Key='uploadedByMariaYliHeikkila.txt')
@@ -193,11 +198,8 @@ def create_collection(client, buckets):
             listofsafes.clear()
             listofsafes = list(set(list(map(lambda x: x.split('/')[1], bucketcontents))) - exclude)
         print('Bucket:', bucket)
-        print('SAFES:', listofsafes)
 
-        for i, safe in enumerate(listofsafes):
-            #print('SAFE index:', i)
-            #print('SAFE name:', safe)
+        for safe in listofsafes:
 
             # SAFE-filename without the subfix
             safename = str(safe.split('.')[0])
@@ -208,7 +210,6 @@ def create_collection(client, buckets):
                 # If there is no metadatafile or CRS-metadatafile, the SAFE does not include data relevant to the script
                 continue
             # THIS FAILS WITH FOLDER BUCKETS
-            logging.log(logging.INFO, f"CRS: {crsmetadatafile}")
             safecrs_metadata = get_crs(get_metadata_content(bucket, crsmetadatafile, client))
             
             # only jp2 that are image bands
@@ -221,12 +222,9 @@ def create_collection(client, buckets):
 
             metadatacontent = get_metadata_content(bucket, metadatafile, client)
             
-            for i, jp2image in enumerate(jp2images):
+            for image in jp2images:
 
-                #print('Image index:', i)
-
-                uri = 'https://a3s.fi/' + bucket + '/' + jp2image
-                #print('Image URI:', uri)
+                uri = 'https://a3s.fi/' + bucket + '/' + image
 
                 items = list(rootcollection.get_items())
                 # Check if the item in question is already added to the collection
@@ -313,20 +311,14 @@ def make_item(uri, metadatacontent, crs_metadata):
         crs_metadata: CRS metadata dict containing CRS string and shapes for different resolutions from get_crs()
     """
 
-    logging.info(uri)
-    #print('Making item')
     params = {}
 
     if re.match(r".+?\d{4}/S2(A|B)", uri):
         params['id'] = uri.split("/")[5].split('.')[0]
     else:
         params['id'] = uri.split('/')[4].split('.')[0]
-
-    #params['id'] = uri.split('/')[4].split('.')[0]
     
     with rasterio.open(uri) as src:
-
-        #print(list([src.bounds]))
         item_transform = src.transform
         # as lat,lon
         params['bbox'] = transform_crs(list([src.bounds]),crs_metadata['CRS'])
@@ -440,8 +432,6 @@ def add_asset(stacItem, uri, crsmetadata=None, thumbnail=False):
             asset=asset
         )
 
-    #print(f'Asset added: {full_bandname}')
-
     return stacItem
 
 def transform_crs(bounds, crs_string):
@@ -512,19 +502,12 @@ def get_metadata_from_xml(metadatabody):
         metadatadict['data_cover'] = 100 - int(float(get_xml_content(doc,'NODATA_PIXEL_PERCENTAGE')))
         metadatadict['start_time'] = get_xml_content(doc,'PRODUCT_START_TIME')
         metadatadict['end_time'] = get_xml_content(doc,'PRODUCT_STOP_TIME')
-        #metadatadict['bbox'] = get_xml_content(doc,'EXT_POS_LIST')
         metadatadict['orbit'] = get_xml_content(doc,'SENSING_ORBIT_NUMBER')
         metadatadict['baseline'] = get_xml_content(doc,'PROCESSING_BASELINE')
-        #metadatadict['producttype'] = get_xml_content(doc,'PRODUCT_TYPE')
-        #metadatadict['productname'] = get_xml_content(doc,'PRODUCT_URI').split('.')[0]
-
-    #print('Metadata extracted')
 
     return metadatadict
 
 if __name__ == '__main__':
-
-    logging.basicConfig(filename='debug.log', level=logging.INFO)
 
     s3 = init_client()
     buckets = get_buckets(s3)
