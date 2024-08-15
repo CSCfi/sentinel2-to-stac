@@ -18,8 +18,7 @@ from pystac.extensions.projection import ProjectionExtension
 from rasterio.warp import transform_bounds
 from rasterio.crs import CRS
 
-def change_to_https(request: requests.Request) -> requests.Request: 
-    request.url = request.url.replace("http:", "https:")
+def change_user_agent(request: requests.Request) -> requests.Request: 
     # This is to help filtering logging, not needed otherwise
     request.headers["User-Agent"] = "update-script"
     return request
@@ -27,7 +26,8 @@ def change_to_https(request: requests.Request) -> requests.Request:
 def init_client():
 
     # Create client with credentials. Allas-conf needed to be run for boto3 to get the credentials
-    s3_client = boto3.client(
+    session = boto3.Session(profile_name = 'default') # Profile name corresponds to the .aws/credentials file profile that contains AWS credentials that have access to Maria's project
+    s3_client = session.client(
         service_name = "s3",
         endpoint_url = "https://a3s.fi", 
         region_name = "regionOne"
@@ -581,7 +581,7 @@ if __name__ == "__main__":
     start = time.time()
 
     app_host = f"{args.host}/geoserver/rest/oseo/"
-    csc_catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/", request_modifier=change_to_https)
+    csc_catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/", request_modifier=change_user_agent)
     all_collections = csc_catalog.get_collections()
     csc_collection = next(collection for collection in all_collections if collection.id=="sentinel2-l2a")
     print(f"Updating STAC Catalog at {args.host}")

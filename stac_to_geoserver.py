@@ -7,8 +7,9 @@ import pystac_client
 from requests.auth import HTTPBasicAuth
 from urllib.parse import urljoin
 
-def change_to_https(request: requests.Request) -> requests.Request: 
-    request.url = request.url.replace("http:", "https:")
+def change_user_agent(request: requests.Request) -> requests.Request: 
+    # This is to help filtering logging, not needed otherwise
+    request.headers["User-Agent"] = "update-script"
     return request
 
 def json_convert(jsonfile):
@@ -128,7 +129,7 @@ if __name__ == "__main__":
     if args.host == "http://86.50.229.158:8080/":
         catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/")
     else:
-        catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/", request_modifier=change_to_https)
+        catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/", request_modifier=change_user_agent)
 
     # Convert the STAC collection json into json that GeoServer can handle
     converted = json_convert(collection_folder / "collection.json")
@@ -163,7 +164,6 @@ if __name__ == "__main__":
         converted = json_convert(collection_folder / item)
         request_point = f"collections/{rootcollection['id']}/products"
         if payload["id"] in posted_ids:
-            continue
             request_point = f"collections/{rootcollection['id']}/products/{payload['id']}"
             r = requests.put(urljoin(app_host, request_point), json=converted, auth=HTTPBasicAuth("admin", pwd))
             r.raise_for_status()
