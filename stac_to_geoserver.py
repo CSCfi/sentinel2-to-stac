@@ -124,7 +124,7 @@ if __name__ == "__main__":
     if args.host == "http://86.50.229.158:8080/":
         catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/")
     else:
-        csc_catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/", headers={"User-Agent":"update-script"})
+        catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/", headers={"User-Agent":"update-script"})
 
     # Convert the STAC collection json into json that GeoServer can handle
     converted = json_convert(collection_folder / "collection.json")
