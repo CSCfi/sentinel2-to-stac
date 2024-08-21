@@ -18,11 +18,6 @@ from pystac.extensions.projection import ProjectionExtension
 from rasterio.warp import transform_bounds
 from rasterio.crs import CRS
 
-def change_user_agent(request: requests.Request) -> requests.Request: 
-    # This is to help filtering logging, not needed otherwise
-    request.headers["User-Agent"] = "update-script"
-    return request
-
 def init_client():
 
     # Create client with credentials. Allas-conf needed to be run for boto3 to get the credentials
@@ -581,11 +576,11 @@ if __name__ == "__main__":
     start = time.time()
 
     app_host = f"{args.host}/geoserver/rest/oseo/"
-    csc_catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/", request_modifier=change_user_agent)
+    csc_catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/", headers={"User-Agent":"update-script"})
     all_collections = csc_catalog.get_collections()
     csc_collection = next(collection for collection in all_collections if collection.id=="sentinel2-l2a")
     print(f"Updating STAC Catalog at {args.host}")
     update_catalog(app_host, csc_collection)
 
     end = time.time()
-    print(f"Script took {round(end-start, 1)} seconds")
+    print(f"Script took {end-start:.2f} seconds")

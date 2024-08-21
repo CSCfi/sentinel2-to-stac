@@ -7,11 +7,6 @@ import pystac_client
 from requests.auth import HTTPBasicAuth
 from urllib.parse import urljoin
 
-def change_user_agent(request: requests.Request) -> requests.Request: 
-    # This is to help filtering logging, not needed otherwise
-    request.headers["User-Agent"] = "update-script"
-    return request
-
 def json_convert(jsonfile):
 
     """
@@ -129,7 +124,7 @@ if __name__ == "__main__":
     if args.host == "http://86.50.229.158:8080/":
         catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/")
     else:
-        catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/", request_modifier=change_user_agent)
+        csc_catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/", headers={"User-Agent":"update-script"})
 
     # Convert the STAC collection json into json that GeoServer can handle
     converted = json_convert(collection_folder / "collection.json")
