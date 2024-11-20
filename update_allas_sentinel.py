@@ -577,8 +577,7 @@ if __name__ == "__main__":
 
     app_host = f"{args.host}/geoserver/rest/oseo/"
     csc_catalog = pystac_client.Client.open(f"{args.host}/geoserver/ogc/stac/v1/", headers={"User-Agent":"update-script"})
-    all_collections = csc_catalog.get_collections()
-    csc_collection = next(collection for collection in all_collections if collection.id=="sentinel2-l2a")
+    csc_collection = csc_catalog.get_collection("sentinel2-l2a")
     print(f"Updating STAC Catalog at {args.host}")
     update_catalog(app_host, csc_collection)
 
